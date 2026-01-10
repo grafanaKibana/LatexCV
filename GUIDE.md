@@ -307,7 +307,7 @@ In the main document files (`cv.tex`, `resume.tex`), comment out sections you do
 
 ### 4. **Customize Colors**
 
-In the main document files, modify the color scheme:
+In `latex/shared/config.tex`, modify the color scheme:
 
 ```latex
 % Change highlight color
@@ -330,7 +330,7 @@ In the main document files, modify the color scheme:
 
 ### 5. **Adjust Page Layout**
 
-Modify margins in the main document files:
+Modify margins in `latex/shared/config.tex`:
 
 ```latex
 \geometry{left=1.4cm, top=.8cm, right=1.4cm, bottom=1.8cm, footskip=.5cm}
