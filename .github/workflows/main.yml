@@ -26,5 +26,20 @@ jobs:
 
     - uses: actions/upload-artifact@v6
       with:
+        name: cv-pdf
+        path: compiled/cv.pdf
+
+    - uses: actions/upload-artifact@v6
+      with:
+        name: resume-pdf
+        path: compiled/resume.pdf
+
+    - uses: actions/upload-artifact@v6
+      with:
+        name: coverletter-pdf
+        path: compiled/coverletter.pdf
+
+    - uses: actions/upload-artifact@v6
+      with:
         name: compiled
         path: compiled/*.pdf
