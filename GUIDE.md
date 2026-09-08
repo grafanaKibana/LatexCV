@@ -28,9 +28,7 @@ LatexCV/
 │   │   ├── skills.tex
 │   │   ├── honors.tex
 │   │   ├── certificates.tex
-│   │   ├── presentation.tex
-│   │   ├── writing.tex
-│   │   └── committees.tex
+│   │   └── presentation.tex
 │   ├── resume/                 # Resume-specific sections
 │   │   ├── resume.tex          # Main Resume document
 │   │   ├── summary.tex
@@ -298,9 +296,7 @@ Similar patterns for:
 - **Projects** (`latex/shared/projects.tex`) - Add project entries when ready
 - **Honors** (`latex/shared/honors.tex`) - Uses `\cvhonor{position}{title}{location}{date}`
 - **Certificates** (`latex/shared/certificates.tex`) - Uses `\cventry`
-- **Writing** (`latex/shared/writing.tex`) - Publications, articles
 - **Presentations** (`latex/shared/presentation.tex`) - Conference talks
-- **Committees** (`latex/shared/committees.tex`) - Professional service
 
 ### 3. **Enable/Disable Sections**
 
@@ -308,8 +304,8 @@ In the main document files (`cv.tex`, `resume.tex`), comment out sections you do
 
 ```latex
 % Comment out to disable a section
-% \input{latex/shared/writing.tex}
-% \input{latex/shared/committees.tex}
+% \input{latex/shared/honors.tex}
+% \input{latex/shared/extracurricular.tex}
 ```
 
 ### 4. **Customize Colors**
