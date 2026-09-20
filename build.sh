@@ -48,7 +48,7 @@ if [ ! -d "$geist/Geist/otf" ]; then
   archive="$cache/geist-font-v1.7.2.zip"
   curl -LfsS https://github.com/vercel/geist-font/releases/download/v1.7.2/geist-font-v1.7.2.zip -o "$archive"
   verify_sha256 7fc800d2ac6b92844895196e5041aca55d814c15db70c44f79b3b83ab82b04e2 "$archive"
-  tar -xf "$archive" -C "$cache"
+  unzip -q "$archive" -d "$cache"
 fi
 
 if [ ! -f "$fontawesome/.ready" ]; then
