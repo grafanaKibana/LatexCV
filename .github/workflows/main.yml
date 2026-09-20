@@ -41,22 +41,13 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v7
 
-    - name: Install fonts
+    - name: Install build tools
       run: |
         apt update
         apt install --yes curl unzip
-        curl --location --fail --silent --show-error \
-          https://github.com/vercel/geist-font/releases/download/v1.7.2/geist-font-v1.7.2.zip \
-          --output /tmp/geist-font.zip
-        echo '7fc800d2ac6b92844895196e5041aca55d814c15db70c44f79b3b83ab82b04e2  /tmp/geist-font.zip' \
-          | sha256sum --check
-        unzip -q /tmp/geist-font.zip -d /tmp
-        find /tmp/geist-font -path '*/otf/*.otf' \
-          -exec install -m 0644 '{}' /usr/local/share/fonts/ \;
-        fc-cache -fv
 
     - name: Compile
-      run: make
+      run: ./build.sh
 
     - uses: actions/upload-artifact@v6
       with:
