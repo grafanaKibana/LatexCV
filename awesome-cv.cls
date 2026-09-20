@@ -459,9 +459,42 @@
 \newcommand{\acvHeaderAfterQuoteSkip}{5mm}
 
 % Others
-\newcommand{\acvSectionTopSkip}{3mm}
-\newcommand{\acvSectionContentTopSkip}{2.5mm}
+\newcommand{\acvSectionGap}{3mm}
+\newcommand{\acvSectionContentGap}{2.5mm}
+\newcommand{\acvSubsectionGap}{2.5mm}
+\newcommand{\acvSubsectionContentGap}{0.5mm}
+\newcommand{\acvSubsectionContentBottomSkip}{0mm}
+\newcommand{\acvEntryGap}{0mm}
+\newcommand{\acvEntryDescriptionTopSkip}{0mm}
+\newcommand{\acvItemGap}{0.6mm}
+\newcommand{\acvEntryContentTopSkip}{-4mm}
+\newcommand{\acvEntryContentBottomSkip}{0mm}
 
+\newbool{acvSectionContentStarted}
+\newbool{acvFirstEntry}
+\newbool{acvFirstProject}
+
+\newcommand{\acvBeginSectionContent}{%
+  \ifbool{acvSectionContentStarted}{}{
+    \vspace{\acvSectionContentGap}%
+    \setbool{acvSectionContentStarted}{true}%
+  }%
+}
+
+\newcommand{\acvBeginSubsection}{%
+  \ifbool{acvSectionContentStarted}
+    {\vspace{\acvSubsectionGap}}
+    {\vspace{\acvSectionContentGap}\setbool{acvSectionContentStarted}{true}}%
+}
+
+% Reset TeX's interline depth at every section boundary without adding space.
+\newcommand{\acvVerticalBoundary}{%
+  \par\nointerlineskip
+  \hrule height 0pt depth 0pt width 0pt
+}
+
+% End every content renderer at the shared boundary before \acvSectionGap.
+\newcommand{\acvEndSectionContent}{\acvVerticalBoundary}
 
 %-------------------------------------------------------------------------------
 %                Commands for utilities
@@ -685,42 +718,46 @@
 % Define a section for CV
 % Usage: \cvsection{<section-title>}
 \newcommand{\cvsection}[1]{%
-  \vspace{\acvSectionTopSkip}
+  \setlength{\parskip}{0pt}%
+  \par\addvspace{\acvSectionGap}%
   \sectionstyle{#1}
   \phantomsection
-  \color{sectiondivider}\vhrulefill{0.9pt}
+  \color{sectiondivider}\vhrulefill{0.9pt}\par\nobreak
+  \acvVerticalBoundary
+  \setbool{acvSectionContentStarted}{false}%
 }
 
 % Define a subsection for CV
 % Usage: \cvsubsection{<subsection-title>}
 \newcommand{\cvsubsection}[1]{%
-  \vspace{\acvSectionContentTopSkip}
-  \vspace{-2mm}
+  \acvBeginSubsection
   \subsectionstyle{#1}
-  \phantomsection
+  \phantomsection\par\nobreak
+  \acvVerticalBoundary
 }
 
 % Define a paragraph for CV
 \newenvironment{cvparagraph}{%
-  \vspace{\acvSectionContentTopSkip}
-  \vspace{-3mm}
+  \acvBeginSectionContent
   \paragraphstyle
 }{%
-  \par
-  \vspace{2mm}
+  \unskip\strut\acvEndSectionContent
 }
 
 % Define an environment for cventry
 \newenvironment{cventries}{%
-  \vspace{\acvSectionContentTopSkip}
-  \begin{center}
+  \acvBeginSectionContent
+  \setbool{acvFirstEntry}{true}%
 }{%
-  \end{center}
+  \acvEndSectionContent
 }
 % Define an entry of cv information
 % Usage: \cventry{<position>}{<title>}{<location>}{<date>}{<description>}
 \newcommand*{\cventry}[5]{%
-  \vspace{-2.0mm}
+  \ifbool{acvFirstEntry}
+    {\setbool{acvFirstEntry}{false}}
+    {\par\vspace{\acvEntryGap}}%
+  \ifblank{#5}{}{\vspace{\acvEntryDescriptionTopSkip}}%
   \setlength\tabcolsep{0pt}
   \setlength{\extrarowheight}{0pt}
   \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} L{\textwidth - 4.5cm} R{4.5cm}}
@@ -728,10 +765,10 @@
       {\entrytitlestyle{#1} & \entrydatestyle{#4} \\}
       {\entrytitlestyle{#1} & \entrydatestyle{#4} \\
       \entrypositionstyle{#2} & \entrylocationstyle{#3} \\}
-    \ifstrempty{#5}
+    \ifblank{#5}
       {}
       {\multicolumn{2}{L{\textwidth}}{\descriptionstyle{#5}} \\}
-  \end{tabular*}%
+  \end{tabular*}\par
 }
 
 % Define an environment for cvsubentry
@@ -759,17 +796,17 @@
 }
 
 % Define an environment for cvhonor
-\newenvironment{cvhonors}{%
-  \vspace{\acvSectionContentTopSkip}
-  \vspace{-4mm}
-  \begin{center}
-    \setlength\tabcolsep{0pt}
-    \renewcommand{\arraystretch}{0.6}
-    \setlength{\extrarowheight}{0pt}
-    \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} >{\centering\arraybackslash}p{1.5cm} @{\hspace{0.25cm}} >{\raggedright\arraybackslash}p{\textwidth - 4.25cm} >{\raggedleft\arraybackslash}p{2.5cm}}
+% Usage: \begin{cvhonors}[<date-column-width>]
+\newenvironment{cvhonors}[1][1.5cm]{%
+  \vspace{\acvSubsectionContentGap}
+  \setlength\tabcolsep{0pt}
+  \renewcommand{\arraystretch}{0.6}
+  \setlength{\extrarowheight}{0pt}
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} >{\raggedright\arraybackslash}p{#1} @{\hspace{0.25cm}} >{\raggedright\arraybackslash}p{\dimexpr\textwidth-#1-2.75cm\relax} >{\raggedleft\arraybackslash}p{2.5cm}}
 }{%
-    \end{tabular*}
-  \end{center}
+  \end{tabular*}\par
+  \vspace{\acvSubsectionContentBottomSkip}%
+  \acvEndSectionContent
 }
 % Define a line of cv information(honor, award or something else)
 % Usage: \cvhonor{<position>}{<title>}{<location>}{<date>}
@@ -779,13 +816,12 @@
 
 % Define an environment for cvskill
 \newenvironment{cvskills}{%
-  \vspace{\acvSectionContentTopSkip}
-  \vspace{-2.0mm}
-    \setlength\tabcolsep{1ex}
-    \setlength{\extrarowheight}{0pt}
-    \tabularx{\textwidth}{r>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}X}
+  \acvBeginSectionContent
+  \setlength\tabcolsep{1ex}
+  \setlength{\extrarowheight}{0pt}
+  \tabularx{\textwidth}{r>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}X}
 }{%
-\endtabularx\par
+  \endtabularx\acvEndSectionContent
 }
 
 % Define a line of cv information(skill)
@@ -796,25 +832,29 @@
 
 % Define an environment for project entries
 \newenvironment{cvprojects}{%
-  \vspace{\acvSectionContentTopSkip}
-  \vspace{-2mm}
-  \setlength\tabcolsep{0pt}
-  \renewcommand{\arraystretch}{0.58}
-  \setlength{\extrarowheight}{0pt}
-  \tabularx{\textwidth}{@{}>{\raggedright\arraybackslash}p{3.5cm}@{\hspace{0.25cm}}>{\raggedleft\arraybackslash}X@{}}
+  \acvBeginSectionContent
+  \setbool{acvFirstProject}{true}%
+  \begingroup
+  \setlength{\parindent}{0pt}
+  \setlength{\parskip}{0pt}
 }{%
-  \endtabularx\par
+  \acvEndSectionContent
+  \endgroup
 }
 
 % Define a project entry
 % Usage: \cvproject{<title>}{<description>}
 \newcommand*{\cvproject}[2]{%
-  \skilltypestyle{#1} & \skillsetstyle{#2} \\[0.15mm]
+  \ifbool{acvFirstProject}
+    {\setbool{acvFirstProject}{false}}
+    {\vspace{\acvItemGap}}%
+  \noindent\skilltypestyle{#1}\par\nobreak
+  \noindent\skillsetstyle{#2}\par
 }
 
 % Define an environment for cvitems(for cventry)
 \newenvironment{cvitems}{%
-  \vspace{-4.0mm}
+  \vspace{\acvEntryContentTopSkip}
   \begin{justify}
   \begin{itemize}[leftmargin=2ex, nosep, noitemsep]
     \setlength{\parskip}{0pt}
@@ -822,7 +862,7 @@
 }{%
   \end{itemize}
   \end{justify}
-  \vspace{1.0mm}
+  \vspace{\acvEntryContentBottomSkip}
 }
 
 
