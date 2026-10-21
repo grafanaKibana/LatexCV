@@ -313,9 +313,14 @@
 % Usage: \dateofbirth{<date>}
 \newcommand*{\dateofbirth}[1]{\def\@dateofbirth{#1}}
 
-% Defines writer's homepage hostname/path, linked over HTTPS (optional)
-% Usage: \homepage{<hostname[/path]>}
-\newcommand*{\homepage}[1]{\def\@homepage{#1}}
+% Defines writer's homepage label and link; bare hostnames use HTTPS (optional)
+% Usage: \homepage{<hostname[/path] or full URL>}
+\newcommand*{\homepage}[1]{%
+  \def\@homepage{#1}%
+  \IfSubStr{#1}{://}%
+    {\def\@homepageurl{#1}}%
+    {\def\@homepageurl{https://#1}}%
+}
 
 % Defines writer's github (optional)
 % Usage: \github{<github-nick>}
@@ -580,7 +585,7 @@
         {}%
         {%
           \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
-          \href{https://\@homepage}{\faAlt{homepage: \@homepage}{\faHouseChimney}{\@homepage}}%
+          \href{\@homepageurl}{\faAlt{homepage: \@homepage}{\faHouseChimney}{\@homepage}}%
         }%
       \ifthenelse{\isundefined{\@github}}%
         {}%
