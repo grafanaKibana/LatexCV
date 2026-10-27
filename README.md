@@ -1,6 +1,6 @@
 <h1 align="center">
   <a href="https://github.com/grafanaKibana/LatexCV" title="LatexCV">
-    <img alt="LatexCV" src="https://github.com/grafanaKibana/LatexCV/raw/master/icon.png" width="200px" height="200px" />
+    <img alt="LatexCV" src="https://github.com/grafanaKibana/LatexCV/raw/master/icon.png" width="128" height="128" />
   </a>
   <br />
   LatexCV
@@ -12,12 +12,16 @@
 
 <div align="center">
 
-[![Build](https://img.shields.io/github/actions/workflow/status/grafanaKibana/LatexCV/main.yml?branch=master&style=for-the-badge&logo=githubactions&logoColor=white&labelColor=111827)](https://github.com/grafanaKibana/LatexCV/actions/workflows/main.yml)
-[![Latest Release](https://img.shields.io/github/v/release/grafanaKibana/LatexCV?style=for-the-badge&logo=github&logoColor=white&labelColor=111827&color=22c55e)](https://github.com/grafanaKibana/LatexCV/releases/latest)
+<p align="center">
+<a href="https://github.com/grafanaKibana/LatexCV/releases/latest/download/resume.pdf"><picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/badge/resume.pdf-Download.svg?variant=default&amp;size=sm&amp;font=geist&amp;mode=dark&amp;logo=ri%3AFaFilePdf&amp;color=93c9b3&amp;logoColor=0e100f&amp;valueColor=0e100f&amp;labelTextColor=0e100f&amp;gradient=93c9b3%2Ca3d2c1%2C110"><img alt="Download resume.pdf" src="https://shieldcn.dev/badge/resume.pdf-Download.svg?variant=default&amp;size=sm&amp;font=geist&amp;mode=light&amp;logo=ri%3AFaFilePdf&amp;color=366353&amp;logoColor=ffffff&amp;valueColor=ffffff&amp;labelTextColor=ffffff&amp;gradient=366353%2C3e6f5f%2C110"></picture></a>
+<a href="https://github.com/grafanaKibana/LatexCV/releases/latest/download/cv.pdf"><picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/badge/cv.pdf-Download.svg?variant=outline&amp;size=sm&amp;font=geist&amp;mode=dark&amp;logo=ri%3AFaFilePdf&amp;color=93c9b3&amp;logoColor=93c9b3&amp;valueColor=fafafa&amp;labelTextColor=fafafa"><img alt="Download cv.pdf" src="https://shieldcn.dev/badge/cv.pdf-Download.svg?variant=outline&amp;size=sm&amp;font=geist&amp;mode=light&amp;logo=ri%3AFaFilePdf&amp;color=366353&amp;logoColor=366353&amp;valueColor=18181b&amp;labelTextColor=18181b"></picture></a>
+<a href="https://github.com/grafanaKibana/LatexCV/releases/latest/download/coverletter.pdf"><picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/badge/coverletter.pdf-Download.svg?variant=outline&amp;size=sm&amp;font=geist&amp;mode=dark&amp;logo=ri%3AFaFilePdf&amp;color=93c9b3&amp;logoColor=93c9b3&amp;valueColor=fafafa&amp;labelTextColor=fafafa"><img alt="Download coverletter.pdf" src="https://shieldcn.dev/badge/coverletter.pdf-Download.svg?variant=outline&amp;size=sm&amp;font=geist&amp;mode=light&amp;logo=ri%3AFaFilePdf&amp;color=366353&amp;logoColor=366353&amp;valueColor=18181b&amp;labelTextColor=18181b"></picture></a>
+</p>
 
-[![Download resume.pdf](https://img.shields.io/badge/resume.pdf-Download-22c55e?style=for-the-badge&logo=adobeacrobatreader&logoColor=white&labelColor=111827)](https://github.com/grafanaKibana/LatexCV/releases/latest/download/resume.pdf)
-[![Download cv.pdf](https://img.shields.io/badge/cv.pdf-Download-38bdf8?style=for-the-badge&logo=adobeacrobatreader&logoColor=white&labelColor=111827)](https://github.com/grafanaKibana/LatexCV/releases/latest/download/cv.pdf)
-[![Download coverletter.pdf](https://img.shields.io/badge/coverletter.pdf-Download-F59E0B?style=for-the-badge&logo=adobeacrobatreader&logoColor=white&labelColor=111827)](https://github.com/grafanaKibana/LatexCV/releases/latest/download/coverletter.pdf)
+<p align="center">
+<a href="https://github.com/grafanaKibana/LatexCV/releases/latest"><picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/github/release/grafanaKibana/LatexCV/stable.svg?variant=outline&amp;size=sm&amp;font=geist&amp;mode=dark&amp;label=Version"><img alt="Latest version" src="https://shieldcn.dev/github/release/grafanaKibana/LatexCV/stable.svg?variant=outline&amp;size=sm&amp;font=geist&amp;mode=light&amp;label=Version"></picture></a>
+<a href="https://github.com/grafanaKibana/LatexCV/actions/workflows/main.yml"><picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/github/ci/grafanaKibana/LatexCV.svg?variant=outline&amp;size=sm&amp;font=geist&amp;mode=dark&amp;label=CI&amp;workflow=main.yml&amp;branch=master&amp;statusDot=true"><img alt="CI status" src="https://shieldcn.dev/github/ci/grafanaKibana/LatexCV.svg?variant=outline&amp;size=sm&amp;font=geist&amp;mode=light&amp;label=CI&amp;workflow=main.yml&amp;branch=master&amp;statusDot=true"></picture></a>
+</p>
 
 </div>
 
@@ -78,3 +82,4 @@ Releases are produced automatically by the [Compile PDFs workflow](https://githu
 [**FontAwesome6 LaTeX Package**](https://github.com/braniii/fontawesome) is a LaTeX package that provides access to the [Font Awesome 6](https://fontawesome.com/v6/icons) icon set.
 
 [**Geist**](https://github.com/vercel/geist-font) provides the sans-serif and monospaced typefaces used by these documents.
+
