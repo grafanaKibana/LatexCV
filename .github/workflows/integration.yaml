@@ -11,6 +11,16 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  coverletter:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v7
+
+    - name: Test plain-text cover letters
+      run: python3 -m unittest discover -s tests -v
+
   changed:
     runs-on: ubuntu-latest
 

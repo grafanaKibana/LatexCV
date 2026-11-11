@@ -59,6 +59,31 @@ The generated files are:
 
 Later runs reuse `.build-cache/`; rerun `./build.sh` after changing the LaTeX sources.
 
+## Generate a Cover Letter Manually
+
+Open **Actions → Generate cover letter → Run workflow** and provide the complete
+letter in the required `text` parameter, including your greeting and closing.
+The workflow produces a **coverletter-pdf** artifact containing `coverletter.pdf`,
+using the shared personal header, photo, fonts and footer. Text is treated as
+plain text; LaTeX special characters are escaped automatically.
+
+For multiline letters, save the text as `letter.txt` and use GitHub CLI to preserve
+blank lines between paragraphs:
+
+```bash
+gh workflow run coverletter.yml -F text=@letter.txt
+```
+
+The workflow must be on the repository's default branch before GitHub offers
+manual runs. Each run uploads its own artifact without creating a release.
+
+To generate the same PDF locally:
+
+```bash
+python3 scripts/prepare-coverletter.py < letter.txt
+./build.sh compiled/coverletter.tex
+```
+
 ## Releases
 
 Releases are produced automatically by the [Compile PDFs workflow](https://github.com/grafanaKibana/LatexCV/actions/workflows/main.yml):

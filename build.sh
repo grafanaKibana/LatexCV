@@ -65,7 +65,11 @@ if [ ! -f "$fontawesome/.ready" ]; then
   touch "$fontawesome/.ready"
 fi
 
-for source in latex/cv/cv.tex latex/resume/resume.tex latex/coverletter/coverletter.tex; do
+if [ "$#" -eq 0 ]; then
+  set -- latex/cv/cv.tex latex/resume/resume.tex latex/coverletter/coverletter.tex
+fi
+
+for source in "$@"; do
   TECTONIC_CACHE_DIR="$cache/tectonic-cache" "$tectonic" -X compile "$root/$source" \
     --outdir "$root/compiled" \
     -Z search-path="$root" \
