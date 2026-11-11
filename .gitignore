@@ -26,3 +26,4 @@
 /compiled/
 /.omc/
 /.omx/
+__pycache__/
