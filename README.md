@@ -73,7 +73,8 @@ page footer. Each produces a **coverletter-pdf** artifact containing
 - `why_company`: content for **Why [Company]?**.
 - `why_me`: content for **Why Me?**.
 
-The template adds a greeting, closing and signature. The old recipient/address,
+The template adds a greeting and closing, without a repeated name/signature.
+The old recipient/address,
 job-title and enclosure placeholder block has been removed. Save each section as
 a UTF-8 text file to preserve paragraphs when using the CLI:
 

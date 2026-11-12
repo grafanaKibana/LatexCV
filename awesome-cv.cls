@@ -238,17 +238,13 @@
 \newcommand*{\skillsetstyle}[1]{{\fontsize{9pt}{1em}\bodyfontlight\color{text} #1}}
 
 % For elements of the cover letter
-\newcommand*{\lettersectionstyleface}[1]{\sectionstyleface{#1}}
-\newcommand*{\lettersectionstyle}[1]{%
-  \def\@acvLetterSectionTmp{#1}
-  \ifthenelse{\boolean{acvSectionColorHighlight}}{%
-    \color{awesome}\lettersectionstyleface{\@acvLetterSectionTmp}}%
-      {\color{text}\lettersectionstyleface{\@acvLetterSectionTmp}}}
+\newcommand*{\lettersectionstyleface}[1]{{\fontsize{10pt}{12pt}\bodyfont\mdseries #1}}
+\newcommand*{\lettersectionstyle}[1]{{\color{graytext}\lettersectionstyleface{#1}}}
 \newcommand*{\recipientaddressstyle}[1]{{\fontsize{9pt}{1em}\bodyfont\scshape\color{graytext} #1}}
 \newcommand*{\recipienttitlestyle}[1]{{\fontsize{11pt}{1em}\bodyfont\bfseries\color{darktext} #1}}
 \newcommand*{\lettertitlestyle}[1]{{\fontsize{10pt}{1em}\bodyfontlight\bfseries\color{darktext} \underline{#1}}}
 \newcommand*{\letterdatestyle}[1]{{\fontsize{9pt}{1em}\bodyfontlight\slshape\color{graytext} #1}}
-\newcommand*{\lettertextstyle}{\paragraphstyle\setlength{\parskip}{2mm}}
+\newcommand*{\lettertextstyle}{\fontsize{9pt}{12pt}\bodyfontlight\upshape\color{text}\setlength{\parskip}{2mm}}
 \newcommand*{\letternamestyle}[1]{{\fontsize{10pt}{1em}\bodyfont\bfseries\color{darktext} #1}}
 \newcommand*{\letterenclosurestyle}[1]{{\fontsize{10pt}{1em}\bodyfontlight\slshape\color{lighttext} #1}}
 
@@ -462,6 +458,8 @@
 \newcommand{\acvHeaderSocialSep}{\BeginAccSupp{ActualText={}}\quad\textbar\quad\EndAccSupp{}}
 \newcommand{\acvHeaderAfterSocialSkip}{6mm}
 \newcommand{\acvHeaderAfterQuoteSkip}{5mm}
+\newsavebox{\acvHeaderIdentityBox}
+\newlength{\acvHeaderPhotoSize}
 
 % Others
 \newcommand{\acvSectionGap}{3mm}
@@ -528,38 +526,48 @@
 % Define a header for CV
 % Usage: \makecvheader
 \newcommand*{\makecvheader}[1][C]{%
+  \begingroup
+  \setlength{\parskip}{0pt}
   \newcommand*{\drawphoto}{%
     \ifthenelse{\isundefined{\@photo}}{}{%
-      \newlength{\photodim}
-      \ifthenelse{\equal{\@photoshape}{circle}}%
-        {\setlength{\photodim}{1.3cm}}%
-        {\setlength{\photodim}{1.8cm}}%
       \ifthenelse{\equal{\@photoedge}{edge}}%
         {\def\@photoborder{darkgray}}%
         {\def\@photoborder{none}}%
-      \begin{tikzpicture}%
-        \node[\@photoshape, draw=\@photoborder, line width=0.3mm, inner sep=\photodim, fill overzoom image=\@photo] () {};
+      \raisebox{\dimexpr(\ht\acvHeaderIdentityBox-\dp\acvHeaderIdentityBox)/2\relax}{%
+      \begin{tikzpicture}[baseline=(current bounding box.center)]%
+        \node[\@photoshape, draw=\@photoborder, line width=0.3mm,
+          inner sep=0pt, outer sep=0pt, minimum size=\acvHeaderPhotoSize,
+          fill overzoom image=\@photo] () {};
       \end{tikzpicture}
+      }%
     }%
   }
   \newlength{\headertextwidth}
-  \newlength{\headerphotowidth}
   \ifthenelse{\isundefined{\@photo}}{
     \setlength{\headertextwidth}{\textwidth}
-    \setlength{\headerphotowidth}{0cm}
   }{%
-    \setlength{\headertextwidth}{0.76\textwidth}
-    \setlength{\headerphotowidth}{0.24\textwidth}
+    \setlength{\headertextwidth}{\dimexpr\textwidth-2cm-\acvSectionGap\relax}
   }%
-  \begin{minipage}[c]{\headerphotowidth}%
-    \ifthenelse{\equal{\@photoalign}{left}}{\raggedright\drawphoto}{}
-  \end{minipage}
-  \begin{minipage}[c]{\headertextwidth}
+  \savebox{\acvHeaderIdentityBox}{%
+    \begin{minipage}[c]{\headertextwidth}
     \ifthenelse{\equal{#1}{L}}{\raggedright}{\ifthenelse{\equal{#1}{R}}{\raggedleft}{\centering}}
     \headerfirstnamestyle{\@firstname}\headerlastnamestyle{{}\acvHeaderNameDelim\@lastname}%
     \\[\acvHeaderAfterNameSkip]%
     \ifthenelse{\isundefined{\@position}}{}{\headerpositionstyle{\@position\\[\acvHeaderAfterPositionSkip]}}%
-    \ifthenelse{\isundefined{\@address}}{}{\headeraddressstyle{\@address\\[\acvHeaderAfterAddressSkip]}}%
+    \ifthenelse{\isundefined{\@address}}{}{\headeraddressstyle{\@address}}%
+    \par\end{minipage}%
+  }%
+  \setlength{\acvHeaderPhotoSize}{\dimexpr\ht\acvHeaderIdentityBox+\dp\acvHeaderIdentityBox\relax}
+  \ifdim\acvHeaderPhotoSize>2cm\setlength{\acvHeaderPhotoSize}{2cm}\fi
+  \noindent
+  \ifthenelse{\isundefined{\@photo}}{\usebox{\acvHeaderIdentityBox}}{%
+    \ifthenelse{\equal{\@photoalign}{left}}%
+      {\drawphoto\hfill\usebox{\acvHeaderIdentityBox}}%
+      {\usebox{\acvHeaderIdentityBox}\hfill\drawphoto}%
+  }%
+  \par\vspace{\acvSectionContentGap}
+  \noindent\begin{minipage}{\textwidth}
+    \ifthenelse{\equal{#1}{L}}{\raggedright}{\ifthenelse{\equal{#1}{R}}{\raggedleft}{\centering}}
     \headersocialstyle{%
       \newbool{isstart}%
       \setbool{isstart}{true}%
@@ -706,9 +714,8 @@
       {}%
       {\headerquotestyle{\@quote}\par\vspace{\acvHeaderAfterQuoteSkip}}%
   \end{minipage}%
-  \begin{minipage}[c]{\headerphotowidth}%
-    \ifthenelse{\equal{\@photoalign}{right}}{\raggedleft\drawphoto}{}
-  \end{minipage}
+  \par
+  \endgroup
 }
 
 % Define a footer for CV
@@ -876,15 +883,18 @@
 %-------------------------------------------------------------------------------
 % Define an environment for cvletter
 \newenvironment{cvletter}{%
+  \par
   \lettertextstyle
 }{%
+  \par
 }
 
 % Define a section for the cover letter
 % Usage: \lettersection{<section-title>}
 \newcommand{\lettersection}[1]{%
-  \cvsection{#1}
-  \acvBeginSectionContent
+  \par\addvspace{\acvSectionGap}
+  \phantomsection
+  \noindent\lettersectionstyle{#1}\par\nobreak
   \lettertextstyle
 }
 
