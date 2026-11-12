@@ -61,23 +61,55 @@ Later runs reuse `.build-cache/`; rerun `./build.sh` after changing the LaTeX so
 
 ## Generate a Cover Letter Manually
 
-Open **Actions → Generate cover letter → Run workflow** and provide the complete
-letter in the required `text` parameter, including your greeting and closing.
-The workflow produces a **coverletter-pdf** artifact containing `coverletter.pdf`,
-using the shared personal header, photo, fonts and footer. Text is treated as
-plain text; LaTeX special characters are escaped automatically.
+Two manual workflows use the same `latex/coverletter/coverletter.tex` template,
+shared portrait in `latex/profile.png`, Geist typography, section styles and
+page footer. Each produces a **coverletter-pdf** artifact containing
+`coverletter.pdf`, without creating a release.
 
-For multiline letters, save the text as `letter.txt` and use GitHub CLI to preserve
-blank lines between paragraphs:
+**Generate cover letter (sections)** accepts four required inputs:
+
+- `company`: company name, used in the **Why [Company]?** heading.
+- `about_me`: content for **About Me**.
+- `why_company`: content for **Why [Company]?**.
+- `why_me`: content for **Why Me?**.
+
+The template adds a greeting, closing and signature. The old recipient/address,
+job-title and enclosure placeholder block has been removed. Save each section as
+a UTF-8 text file to preserve paragraphs when using the CLI:
 
 ```bash
-gh workflow run coverletter.yml -F text=@letter.txt
+gh workflow run coverletter.yml \
+  -f company='Company name' \
+  -F about_me=@about-me.txt \
+  -F why_company=@why-company.txt \
+  -F why_me=@why-me.txt
+```
+
+**Generate cover letter (paste text)** accepts a single `text` input containing
+the complete letter, including your own greeting and closing. It renders your
+text without adding section headings or a second signature. Paste into the
+**Run workflow** form, or use a file for reliable multiline input:
+
+```bash
+gh workflow run coverletter-text.yml -F text=@letter.txt
 ```
 
 The workflow must be on the repository's default branch before GitHub offers
-manual runs. Each run uploads its own artifact without creating a release.
+manual runs. Both versions treat input as plain text and escape LaTeX special
+characters automatically.
 
-To generate the same PDF locally:
+To generate a structured PDF locally:
+
+```bash
+python3 scripts/prepare-coverletter.py \
+  --company='Company name' \
+  --about-me="$(cat about-me.txt)" \
+  --why-company="$(cat why-company.txt)" \
+  --why-me="$(cat why-me.txt)"
+./build.sh compiled/coverletter.tex
+```
+
+For a full-text PDF:
 
 ```bash
 python3 scripts/prepare-coverletter.py < letter.txt

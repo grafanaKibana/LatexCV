@@ -1,5 +1,6 @@
-"""Turn a complete plain-text letter from stdin into compiled/coverletter.tex."""
+"""Populate the shared cover-letter template from sections or full text on stdin."""
 
+import argparse
 from pathlib import Path
 import re
 import sys
@@ -31,15 +32,56 @@ def render_text(text):
     )
 
 
+def render_sections(company, about_me, why_company, why_me):
+    fields = {
+        "company": company,
+        "aboutme": about_me,
+        "whycompany": why_company,
+        "whyme": why_me,
+    }
+    definitions = []
+    for name, value in fields.items():
+        if not value.strip():
+            raise ValueError(f"{name} must not be empty.")
+        if name == "company":
+            value = " ".join(value.split())
+        definitions.append(
+            r"\newcommand{\coverletter" + name + "}{" + render_text(value) + "}"
+        )
+    return "\n".join([*definitions, r"\input{latex/coverletter/coverletter.tex}", ""])
+
+
+def render_full_text(text):
+    return "\n".join([
+        r"\newcommand{\coverlettercontent}{\begin{cvletter}",
+        render_text(text),
+        r"\end{cvletter}}",
+        r"\input{latex/coverletter/coverletter.tex}",
+        "",
+    ])
+
+
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--company")
+    parser.add_argument("--about-me")
+    parser.add_argument("--why-company")
+    parser.add_argument("--why-me")
+    args = parser.parse_args()
+    fields = (args.company, args.about_me, args.why_company, args.why_me)
+    structured = any(field is not None for field in fields)
+    if structured and any(field is None for field in fields):
+        parser.error("Provide all four section inputs, or omit them to read stdin.")
     try:
-        body = render_text(sys.stdin.read())
+        if structured:
+            document = render_sections(*fields)
+        else:
+            document = render_full_text(sys.stdin.read())
     except ValueError as error:
-        sys.exit(str(error))
-    template = (ROOT / "latex/coverletter/plain-text.tex").read_text(encoding="utf-8")
+        parser.error(str(error))
     output = ROOT / "compiled/coverletter.tex"
     output.parent.mkdir(exist_ok=True)
-    output.write_text(template.replace("%%LETTER_TEXT%%", body), encoding="utf-8")
+    output.write_text(document, encoding="utf-8")
 
 
 if __name__ == "__main__":

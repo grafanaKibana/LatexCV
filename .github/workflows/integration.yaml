@@ -18,7 +18,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v7
 
-    - name: Test plain-text cover letters
+    - name: Test cover letters
       run: python3 -m unittest discover -s tests -v
 
   changed:

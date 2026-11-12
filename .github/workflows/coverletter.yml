@@ -1,10 +1,22 @@
-name: Generate cover letter
+name: Generate cover letter (sections)
 
 on:
   workflow_dispatch:
     inputs:
-      text:
-        description: Full cover letter (plain text, including greeting and closing)
+      company:
+        description: Company name (used in the Why section heading)
+        required: true
+        type: string
+      about_me:
+        description: About Me — your background and relevant experience
+        required: true
+        type: string
+      why_company:
+        description: Why this company — your motivation for joining
+        required: true
+        type: string
+      why_me:
+        description: Why Me — what you bring to the role
         required: true
         type: string
 
@@ -21,8 +33,16 @@ jobs:
 
     - name: Prepare cover letter
       env:
-        COVER_LETTER_TEXT: ${{ inputs.text }}
-      run: printf '%s' "$COVER_LETTER_TEXT" | python3 scripts/prepare-coverletter.py
+        COMPANY: ${{ inputs.company }}
+        ABOUT_ME: ${{ inputs.about_me }}
+        WHY_COMPANY: ${{ inputs.why_company }}
+        WHY_ME: ${{ inputs.why_me }}
+      run: |
+        python3 scripts/prepare-coverletter.py \
+          --company="$COMPANY" \
+          --about-me="$ABOUT_ME" \
+          --why-company="$WHY_COMPANY" \
+          --why-me="$WHY_ME"
 
     - name: Compile PDF
       run: ./build.sh compiled/coverletter.tex

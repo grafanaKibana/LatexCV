@@ -39,6 +39,40 @@ class CoverLetterTests(unittest.TestCase):
             with self.subTest(text=text), self.assertRaises(ValueError):
                 coverletter.render_text(text)
 
+    def test_sections_use_original_template_and_escape_all_fields(self):
+        document = coverletter.render_sections(
+            "R&D_Company", "C#/.NET\n\nNLP", "100% alignment", r"\input{secret}"
+        )
+        self.assertIn(r"\newcommand{\coverlettercompany}{R\&D\_Company}", document)
+        self.assertIn("C\\#/.NET\n\nNLP", document)
+        self.assertIn(r"100\% alignment", document)
+        self.assertIn(r"\textbackslash{}input\{secret\}", document)
+        self.assertTrue(document.endswith("\\input{latex/coverletter/coverletter.tex}\n"))
+        self.assertNotIn(r"\documentclass", document)
+
+    def test_sections_reject_each_blank_field(self):
+        for index in range(4):
+            values = ["Company", "About me", "Why company", "Why me"]
+            values[index] = " \n\t"
+            with self.subTest(index=index), self.assertRaises(ValueError):
+                coverletter.render_sections(*values)
+
+    def test_company_name_is_one_line(self):
+        document = coverletter.render_sections(" Acme\r\n Team ", "About", "Why", "Me")
+        self.assertIn(r"\coverlettercompany}{Acme Team}", document)
+
+    def test_full_text_preserves_own_greeting_and_closing(self):
+        document = coverletter.render_full_text("Hi,\n\nMy letter.\n\nThanks!")
+        self.assertIn("Hi,\n\nMy letter.\n\nThanks!", document)
+        self.assertIn(r"\newcommand{\coverlettercontent}", document)
+        self.assertTrue(document.endswith("\\input{latex/coverletter/coverletter.tex}\n"))
+        self.assertNotIn(r"\lettersection", document)
+        self.assertNotIn(r"\makeletterclosing", document)
+
+    def test_full_text_rejects_empty_letter(self):
+        with self.assertRaises(ValueError):
+            coverletter.render_full_text(" \n")
+
 
 if __name__ == "__main__":
     unittest.main()
