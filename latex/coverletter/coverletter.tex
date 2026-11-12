@@ -16,12 +16,13 @@
 
 \documentclass[11pt, a4paper]{awesome-cv}
 \input{latex/shared/config.tex}
-\newcommand{\includeProfilePhoto}{1}
+\newcommand{\includeProfilePhoto}{0}
 \input{latex/shared/personal-info.tex}
 
 % The manual action supplies these values before loading this template.
 % Defaults use the supplied sample letter for a standalone/local build.
 \providecommand{\coverlettercompany}{Your Team}
+\providecommand{\coverletterintro}{}
 \providecommand{\coverletteraboutme}{%
 I see you’re looking for someone who can build NLP features and AI agents and take them into production. That’s close to what I did at ELEKS, where I worked on information extraction, classification, rewriting, conversational AI and retrieval for an enterprise product. I’ve also worked on RAG in my own projects.
 
@@ -35,6 +36,8 @@ You also mention reproducible experiments and documenting model behaviour. I bui
 \providecommand{\coverlettercontent}{%
   \begin{cvletter}
   Hi,
+
+  \coverletterintro
 
   \lettersection{About Me}
   \coverletteraboutme
@@ -51,7 +54,7 @@ You also mention reproducible experiments and documenting model behaviour. I bui
 }
 
 \begin{document}
-\makecvheader[L]
+\makecvheader[C]
 \makecvfooter
   {\today}
   {Nikita Reshetnik~~~·~~~Cover Letter}

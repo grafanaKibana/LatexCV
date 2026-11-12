@@ -7,6 +7,11 @@ on:
         description: Company name (used in the Why section heading)
         required: true
         type: string
+      intro:
+        description: Optional introduction after Hi and before About Me
+        required: false
+        default: ''
+        type: string
       about_me:
         description: About Me — your background and relevant experience
         required: true
@@ -34,12 +39,14 @@ jobs:
     - name: Prepare cover letter
       env:
         COMPANY: ${{ inputs.company }}
+        INTRO: ${{ inputs.intro }}
         ABOUT_ME: ${{ inputs.about_me }}
         WHY_COMPANY: ${{ inputs.why_company }}
         WHY_ME: ${{ inputs.why_me }}
       run: |
         python3 scripts/prepare-coverletter.py \
           --company="$COMPANY" \
+          --intro="$INTRO" \
           --about-me="$ABOUT_ME" \
           --why-company="$WHY_COMPANY" \
           --why-me="$WHY_ME"

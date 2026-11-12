@@ -32,7 +32,7 @@ def render_text(text):
     )
 
 
-def render_sections(company, about_me, why_company, why_me):
+def render_sections(company, about_me, why_company, why_me, intro=""):
     fields = {
         "company": company,
         "aboutme": about_me,
@@ -48,6 +48,8 @@ def render_sections(company, about_me, why_company, why_me):
         definitions.append(
             r"\newcommand{\coverletter" + name + "}{" + render_text(value) + "}"
         )
+    if intro.strip():
+        definitions.append(r"\newcommand{\coverletterintro}{" + render_text(intro) + "}")
     return "\n".join([*definitions, r"\input{latex/coverletter/coverletter.tex}", ""])
 
 
@@ -64,6 +66,7 @@ def render_full_text(text):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--company")
+    parser.add_argument("--intro", default="")
     parser.add_argument("--about-me")
     parser.add_argument("--why-company")
     parser.add_argument("--why-me")
@@ -72,9 +75,11 @@ def main():
     structured = any(field is not None for field in fields)
     if structured and any(field is None for field in fields):
         parser.error("Provide all four section inputs, or omit them to read stdin.")
+    if args.intro and not structured:
+        parser.error("--intro requires all four section inputs.")
     try:
         if structured:
-            document = render_sections(*fields)
+            document = render_sections(*fields, intro=args.intro)
         else:
             document = render_full_text(sys.stdin.read())
     except ValueError as error:

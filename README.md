@@ -62,8 +62,8 @@ Later runs reuse `.build-cache/`; rerun `./build.sh` after changing the LaTeX so
 ## Generate a Cover Letter Manually
 
 Two manual workflows use the same `latex/coverletter/coverletter.tex` template,
-shared portrait in `latex/profile.png`, Geist typography, section styles and
-page footer. Each produces a **coverletter-pdf** artifact containing
+centered header without a photo, Geist typography, section styles and page footer.
+Each produces a **coverletter-pdf** artifact containing
 `coverletter.pdf`, without creating a release.
 
 **Generate cover letter (sections)** accepts four required inputs:
@@ -73,6 +73,9 @@ page footer. Each produces a **coverletter-pdf** artifact containing
 - `why_company`: content for **Why [Company]?**.
 - `why_me`: content for **Why Me?**.
 
+An optional `intro` input adds one or more paragraphs after **Hi,** and before
+**About Me**. Leave it empty to start directly with the sections.
+
 The template adds a greeting and closing, without a repeated name/signature.
 The old recipient/address,
 job-title and enclosure placeholder block has been removed. Save each section as
@@ -81,6 +84,7 @@ a UTF-8 text file to preserve paragraphs when using the CLI:
 ```bash
 gh workflow run coverletter.yml \
   -f company='Company name' \
+  -F intro=@intro.txt \
   -F about_me=@about-me.txt \
   -F why_company=@why-company.txt \
   -F why_me=@why-me.txt
@@ -104,6 +108,7 @@ To generate a structured PDF locally:
 ```bash
 python3 scripts/prepare-coverletter.py \
   --company='Company name' \
+  --intro="$(cat intro.txt)" \
   --about-me="$(cat about-me.txt)" \
   --why-company="$(cat why-company.txt)" \
   --why-me="$(cat why-me.txt)"

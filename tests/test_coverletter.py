@@ -61,6 +61,20 @@ class CoverLetterTests(unittest.TestCase):
         document = coverletter.render_sections(" Acme\r\n Team ", "About", "Why", "Me")
         self.assertIn(r"\coverlettercompany}{Acme Team}", document)
 
+    def test_optional_intro_preserves_paragraphs_and_escapes_latex(self):
+        document = coverletter.render_sections(
+            "Company", "About", "Why company", "Why me", intro="Hello R&D!\n\n100% interested."
+        )
+        self.assertIn(
+            "\\newcommand{\\coverletterintro}{Hello R\\&D!\n\n100\\% interested.}", document
+        )
+
+    def test_blank_intro_does_not_add_content(self):
+        for intro in ("", " \n\t"):
+            with self.subTest(intro=intro):
+                document = coverletter.render_sections("Company", "About", "Why", "Me", intro=intro)
+                self.assertNotIn(r"\newcommand{\coverletterintro}", document)
+
     def test_full_text_preserves_own_greeting_and_closing(self):
         document = coverletter.render_full_text("Hi,\n\nMy letter.\n\nThanks!")
         self.assertIn("Hi,\n\nMy letter.\n\nThanks!", document)
