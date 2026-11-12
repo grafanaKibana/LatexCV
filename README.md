@@ -63,8 +63,10 @@ Later runs reuse `.build-cache/`; rerun `./build.sh` after changing the LaTeX so
 
 Two manual workflows use the same `latex/coverletter/coverletter.tex` template,
 centered header without a photo, Geist typography, section styles and page footer.
-Each produces a **coverletter-pdf** artifact containing
-`coverletter.pdf`, without creating a release.
+The structured workflow uploads a `coverlatter-{companyname}` artifact containing
+`coverlatter-{companyname}.pdf` (for example, `coverlatter-Sogelink.pdf`). Company
+names are normalized for safe filenames. The paste-text workflow uploads a
+**coverletter-pdf** artifact containing `coverletter.pdf`. Neither creates a release.
 
 **Generate cover letter (sections)** accepts four required inputs:
 
