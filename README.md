@@ -7,7 +7,7 @@
 </h1>
 
 <p align="center">
-  My personal résumé, CV and cover letter, built with LaTeX and published automatically on every merge to <code>master</code>.
+  My personal résumé and CV, built with LaTeX and published automatically. Cover letters are generated on demand.
 </p>
 
 <div align="center">
@@ -15,7 +15,6 @@
 <p align="center">
 <a href="https://github.com/grafanaKibana/LatexCV/releases/latest/download/resume.pdf"><picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/badge/resume.pdf-Download.svg?variant=default&amp;size=sm&amp;font=geist&amp;mode=dark&amp;logo=ri%3AFaFilePdf&amp;color=93c9b3&amp;logoColor=0e100f&amp;valueColor=0e100f&amp;labelTextColor=0e100f&amp;gradient=93c9b3%2Ca3d2c1%2C110"><img alt="Download resume.pdf" src="https://shieldcn.dev/badge/resume.pdf-Download.svg?variant=default&amp;size=sm&amp;font=geist&amp;mode=light&amp;logo=ri%3AFaFilePdf&amp;color=366353&amp;logoColor=ffffff&amp;valueColor=ffffff&amp;labelTextColor=ffffff&amp;gradient=366353%2C3e6f5f%2C110"></picture></a>
 <a href="https://github.com/grafanaKibana/LatexCV/releases/latest/download/cv.pdf"><picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/badge/cv.pdf-Download.svg?variant=outline&amp;size=sm&amp;font=geist&amp;mode=dark&amp;logo=ri%3AFaFilePdf&amp;color=93c9b3&amp;logoColor=93c9b3&amp;valueColor=fafafa&amp;labelTextColor=fafafa"><img alt="Download cv.pdf" src="https://shieldcn.dev/badge/cv.pdf-Download.svg?variant=outline&amp;size=sm&amp;font=geist&amp;mode=light&amp;logo=ri%3AFaFilePdf&amp;color=366353&amp;logoColor=366353&amp;valueColor=18181b&amp;labelTextColor=18181b"></picture></a>
-<a href="https://github.com/grafanaKibana/LatexCV/releases/latest/download/coverletter.pdf"><picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/badge/coverletter.pdf-Download.svg?variant=outline&amp;size=sm&amp;font=geist&amp;mode=dark&amp;logo=ri%3AFaFilePdf&amp;color=93c9b3&amp;logoColor=93c9b3&amp;valueColor=fafafa&amp;labelTextColor=fafafa"><img alt="Download coverletter.pdf" src="https://shieldcn.dev/badge/coverletter.pdf-Download.svg?variant=outline&amp;size=sm&amp;font=geist&amp;mode=light&amp;logo=ri%3AFaFilePdf&amp;color=366353&amp;logoColor=366353&amp;valueColor=18181b&amp;labelTextColor=18181b"></picture></a>
 </p>
 
 <p align="center">
@@ -29,7 +28,7 @@
 
 This repository holds my personal **résumé**, **CV (Curriculum Vitae)** and **cover letter**. It is a fork of [posquit0/Awesome-CV](https://github.com/posquit0/Awesome-CV) — the original LaTeX template — customized for my own profile.
 
-The badges above always link to the freshest documents: every push to `master` compiles the LaTeX sources and publishes a new [GitHub Release](https://github.com/grafanaKibana/LatexCV/releases/latest) with `resume.pdf`, `cv.pdf` and `coverletter.pdf` attached. There is no need to dig through the Actions tab to find the latest build — just click a download badge.
+The badges above link to the latest released résumé and CV. Pushes to `master` that change their LaTeX sources or shared assets publish a new [GitHub Release](https://github.com/grafanaKibana/LatexCV/releases/latest) with `resume.pdf` and `cv.pdf` attached. Cover letters are generated through the manual workflows below and are not included in releases.
 
 ## How to Build Locally
 
@@ -63,10 +62,9 @@ Later runs reuse `.build-cache/`; rerun `./build.sh` after changing the LaTeX so
 
 Two manual workflows use the same `latex/coverletter/coverletter.tex` template,
 centered header without a photo, Geist typography, section styles and page footer.
-The structured workflow uploads a `coverlatter-{companyname}` artifact containing
-`coverlatter-{companyname}.pdf` (for example, `coverlatter-Sogelink.pdf`). Company
-names are normalized for safe filenames. The paste-text workflow uploads a
-**coverletter-pdf** artifact containing `coverletter.pdf`. Neither creates a release.
+Both workflows upload a `coverletter-{companyname}` artifact containing
+`coverletter-{companyname}.pdf` (for example, `coverletter-Sogelink.pdf`). Company
+names are normalized for safe filenames. Neither creates a release.
 
 **Generate cover letter (sections)** accepts four required inputs:
 
@@ -85,20 +83,21 @@ a UTF-8 text file to preserve paragraphs when using the CLI:
 
 ```bash
 gh workflow run coverletter.yml \
-  -f company='Company name' \
+  -f company='Sogelink' \
   -F intro=@intro.txt \
   -F about_me=@about-me.txt \
   -F why_company=@why-company.txt \
   -F why_me=@why-me.txt
 ```
 
-**Generate cover letter (paste text)** accepts a single `text` input containing
-the complete letter, including your own greeting and closing. It renders your
-text without adding section headings or a second signature. Paste into the
-**Run workflow** form, or use a file for reliable multiline input:
+**Generate cover letter (paste text)** accepts a `company` input for the filename
+and a `text` input containing the complete letter, including your own greeting
+and closing. It renders your text without adding section headings or a second
+signature. Paste into the **Run workflow** form, or use a file for reliable
+multiline input:
 
 ```bash
-gh workflow run coverletter-text.yml -F text=@letter.txt
+gh workflow run coverletter-text.yml -f company='Sogelink' -F text=@letter.txt
 ```
 
 The workflow must be on the repository's default branch before GitHub offers
@@ -109,7 +108,7 @@ To generate a structured PDF locally:
 
 ```bash
 python3 scripts/prepare-coverletter.py \
-  --company='Company name' \
+  --company='Sogelink' \
   --intro="$(cat intro.txt)" \
   --about-me="$(cat about-me.txt)" \
   --why-company="$(cat why-company.txt)" \
@@ -128,8 +127,8 @@ python3 scripts/prepare-coverletter.py < letter.txt
 
 Releases are produced automatically by the [Compile PDFs workflow](https://github.com/grafanaKibana/LatexCV/actions/workflows/main.yml):
 
-1. On every push and pull request the LaTeX sources are compiled and uploaded as workflow artifacts.
-2. On a push to `master` **that changes the LaTeX content** (anything under `latex/` or `awesome-cv.cls`), the compiled PDFs are additionally attached to a new GitHub Release named JetBrains-style — `CVBuild <year>.<iteration>` (e.g. `CVBuild 2026.1`), where the iteration increments per release and resets each year. Docs-only or workflow-only changes do not cut a release.
+1. On every push and pull request, only the CV and résumé are compiled and uploaded as workflow artifacts.
+2. On a push to `master` **that changes CV/résumé content or shared assets** (`latex/cv/`, `latex/resume/`, `latex/shared/`, `latex/profile.png` or `awesome-cv.cls`), those two PDFs are additionally attached to a new GitHub Release named JetBrains-style — `CVBuild <year>.<iteration>` (e.g. `CVBuild 2026.1`), where the iteration increments per release and resets each year. Cover-letter-only, docs-only or workflow-only changes do not cut a release.
 
 ## Credit
 

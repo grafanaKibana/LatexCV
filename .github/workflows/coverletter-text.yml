@@ -3,6 +3,10 @@ name: Generate cover letter (paste text)
 on:
   workflow_dispatch:
     inputs:
+      company:
+        description: Company name (used in the PDF filename)
+        required: true
+        type: string
       text:
         description: Full letter (plain text, including greeting and closing)
         required: true
@@ -27,9 +31,15 @@ jobs:
     - name: Compile PDF
       run: ./build.sh compiled/coverletter.tex
 
+    - name: Name PDF for company
+      id: filename
+      env:
+        COMPANY: ${{ inputs.company }}
+      run: python3 scripts/name-coverletter.py
+
     - name: Upload cover letter
       uses: actions/upload-artifact@v6
       with:
-        name: coverletter-pdf
-        path: compiled/coverletter.pdf
+        name: ${{ steps.filename.outputs.stem }}
+        path: compiled/${{ steps.filename.outputs.stem }}.pdf
         if-no-files-found: error

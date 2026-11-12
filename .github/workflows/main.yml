@@ -30,7 +30,10 @@ jobs:
       with:
         filters: |
           latex:
-          - 'latex/**'
+          - 'latex/cv/**'
+          - 'latex/resume/**'
+          - 'latex/shared/**'
+          - 'latex/profile.png'
           - 'awesome-cv.cls'
 
   build:
@@ -47,7 +50,7 @@ jobs:
         apt install --yes curl unzip
 
     - name: Compile
-      run: ./build.sh
+      run: ./build.sh latex/cv/cv.tex latex/resume/resume.tex
 
     - uses: actions/upload-artifact@v6
       with:
@@ -61,19 +64,17 @@ jobs:
 
     - uses: actions/upload-artifact@v6
       with:
-        name: coverletter-pdf
-        path: compiled/coverletter.pdf
-
-    - uses: actions/upload-artifact@v6
-      with:
         name: compiled
-        path: compiled/*.pdf
+        path: |
+          compiled/cv.pdf
+          compiled/resume.pdf
+        if-no-files-found: error
 
   release:
     needs:
     - build
     - changes
-    # Only publish a release when the LaTeX content changes land on master.
+    # Only publish a release when CV/résumé content changes land on master.
     if: >-
       github.event_name == 'push'
       && github.ref == 'refs/heads/master'
@@ -121,7 +122,9 @@ jobs:
 
           Download the latest documents:
 
-          | Document | Résumé | CV | Cover Letter |
-          | --- | --- | --- | --- |
-          | Download | [resume.pdf](https://github.com/${{ github.repository }}/releases/latest/download/resume.pdf) | [cv.pdf](https://github.com/${{ github.repository }}/releases/latest/download/cv.pdf) | [coverletter.pdf](https://github.com/${{ github.repository }}/releases/latest/download/coverletter.pdf) |
-        files: release-files/*.pdf
+          | Document | Résumé | CV |
+          | --- | --- | --- |
+          | Download | [resume.pdf](https://github.com/${{ github.repository }}/releases/latest/download/resume.pdf) | [cv.pdf](https://github.com/${{ github.repository }}/releases/latest/download/cv.pdf) |
+        files: |
+          release-files/cv.pdf
+          release-files/resume.pdf
